@@ -13,8 +13,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -26,13 +28,14 @@ import javafx.stage.Stage;
 public class DownloadAllFiles extends Application {
 
     File selectedDirectory;
+    TextField fileExtension = new TextField();
     TextField urlToDownload = new TextField();
 
     @Override
     public void start(Stage primaryStage) {
 
         Label urlLabel = new Label("Paste the URL here");
-
+        Label fileExten = new Label("Enter File Extension");
         Text labelDirectory = new Text();
         //TextField downloadLocation = new TextField ();
         Button directory = new Button();
@@ -60,13 +63,16 @@ public class DownloadAllFiles extends Application {
 
             @Override
             public void handle(ActionEvent event) {
+                String extension = fileExtension.getText();
                 String url = urlToDownload.getText();
-                go(url);
+                go(url, extension);
+                labelDirectory.setFill(Color.web("#ff0000"));
+                labelDirectory.setText("Complete");
             }
         });
 
         VBox root = new VBox();
-        root.getChildren().addAll(urlLabel, urlToDownload, directory, labelDirectory, btn);
+        root.getChildren().addAll(urlLabel, urlToDownload,fileExten,fileExtension, directory, labelDirectory, btn);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(10);
         root.setPrefSize(400, 200);
@@ -85,10 +91,10 @@ public class DownloadAllFiles extends Application {
         launch(args);
     }
 
-    public void go(String url) {
+    public void go(String url, String extension) {
         WebScanner scanner = new WebScanner();
         try {
-            scanner.initiateSearch(url, ".pdf", selectedDirectory);
+            scanner.initiateSearch(url, extension, selectedDirectory);
         } catch (Exception e) {
 
         }
