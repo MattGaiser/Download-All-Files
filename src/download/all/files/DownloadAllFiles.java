@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -34,9 +35,10 @@ public class DownloadAllFiles extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Label urlLabel = new Label("Paste the URL here");
-        Label fileExten = new Label("Enter File Extension");
-        Text labelDirectory = new Text();
+        Label urlLabel = new Label("Paste the URL here:");
+        Label fileExten = new Label("Enter File Extension:");
+        Text labelDirectory = new Text("No Directory Selected Yet");
+        Text messageOutput = new Text();
         //TextField downloadLocation = new TextField ();
         Button directory = new Button();
         directory.setText("Select Folder for Files");
@@ -63,23 +65,41 @@ public class DownloadAllFiles extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                String extension = fileExtension.getText();
-                String url = urlToDownload.getText();
-                go(url, extension);
-                labelDirectory.setFill(Color.web("#ff0000"));
-                labelDirectory.setText("Complete");
+                if (urlToDownload.getText().equals("")) {
+                    messageOutput.setFill(Color.web("#ff0000"));
+                    messageOutput.setText("No url to download from");
+                } else if (fileExtension.getText().equals("")) {
+                    messageOutput.setFill(Color.web("#ff0000"));
+                    messageOutput.setText("Filetype not selected");
+                } else {
+
+                    String extension = fileExtension.getText();
+                    String url = urlToDownload.getText();
+                    go(url, extension);
+                    labelDirectory.setFill(Color.web("#ff0000"));
+                    labelDirectory.setText("Complete");
+                }
             }
         });
 
+        HBox url = new HBox(urlLabel, urlToDownload);
+        url.setSpacing(5);
+        url.setAlignment(Pos.CENTER);
+        HBox file = new HBox(fileExten, fileExtension);
+        file.setSpacing(5);
+        file.setAlignment(Pos.CENTER);
+        HBox direct = new HBox(directory, labelDirectory);
+        direct.setAlignment(Pos.CENTER);
+        direct.setSpacing(20);
         VBox root = new VBox();
-        root.getChildren().addAll(urlLabel, urlToDownload,fileExten,fileExtension, directory, labelDirectory, btn);
+        root.getChildren().addAll(url, file, direct, btn, messageOutput);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(10);
-        root.setPrefSize(400, 200);
+        root.setPrefSize(400, 250);
 
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Download All PDF Files");
+        primaryStage.setTitle("Download All Files");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
