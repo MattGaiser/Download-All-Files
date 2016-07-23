@@ -21,6 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.apache.commons.validator.routines.UrlValidator;
+
 
 /**
  *
@@ -56,7 +58,7 @@ public class DownloadAllFiles extends Application {
                 } else {
                     labelDirectory.setText(selectedDirectory.getAbsolutePath());
                 }
-            }
+            } 
         });
 
         Button btn = new Button();
@@ -65,18 +67,34 @@ public class DownloadAllFiles extends Application {
 
             @Override
             public void handle(ActionEvent event) {
+                
+                UrlValidator validator = new UrlValidator();
+                
                 if (urlToDownload.getText().equals("")) {
                     messageOutput.setFill(Color.web("#ff0000"));
-                    messageOutput.setText("No url to download from");
-                } else if (fileExtension.getText().equals("")) {
+                    messageOutput.setText("No URL given.");
+                }
+                else if (!validator.isValid(urlToDownload.getText()))
+                 {
+                    messageOutput.setFill(Color.web("#ff0000"));
+                    messageOutput.setText("URL is not valid");
+                 }
+                else if (fileExtension.getText().equals("")) {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("Filetype not selected");
-                } else {
+                } 
+                else if (labelDirectory.getText().equalsIgnoreCase("No Directory selected"))
+                {
+                    messageOutput.setFill(Color.web("#ff0000"));
+                    messageOutput.setText("Directory not selected");
+                }
+                
+                else {
 
                     String extension = fileExtension.getText();
                     String url = urlToDownload.getText();
                     go(url, extension);
-                    labelDirectory.setFill(Color.web("#ff0000"));
+                    labelDirectory.setFill(Color.web("#00ff00"));
                     labelDirectory.setText("Complete");
                 }
             }
