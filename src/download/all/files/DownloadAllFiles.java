@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -83,7 +84,7 @@ public class DownloadAllFiles extends Application {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("Filetype not selected");
                 } 
-                else if (labelDirectory.getText().equalsIgnoreCase("No Directory selected"))
+                else if (labelDirectory.getText().contains("No Directory"))
                 {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("Directory not selected");
@@ -91,12 +92,33 @@ public class DownloadAllFiles extends Application {
                 
                 else {
 
+                    int numberOfFiles = 0; 
                     String extension = fileExtension.getText();
                     String url = urlToDownload.getText();
-                    go(url, extension);
-                    labelDirectory.setFill(Color.web("#00ff00"));
-                    labelDirectory.setText("Complete");
+                    numberOfFiles = go(url, extension, messageOutput);                    
+                    if (numberOfFiles == 0)
+                    {
+                        labelDirectory.setFill(Color.web("#ff0000"));
+                        labelDirectory.setText("No files found.");
+                    }
+                    else 
+                    {
+                        labelDirectory.setFill(Color.web("#00ff00"));
+                        labelDirectory.setText("Complete. " + numberOfFiles + " files downloaded.");
+
+                    }
                 }
+            }
+
+            private int go(String url, String extension, Text messageOutput) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                 WebScanner scanner = new WebScanner();
+        int numberOfFiles = 0;
+        try {
+            numberOfFiles = scanner.initiateSearch(url, extension, selectedDirectory, messageOutput);
+        } catch (Exception e) {
+        }
+        return numberOfFiles;
             }
         });
 
@@ -118,6 +140,7 @@ public class DownloadAllFiles extends Application {
         Scene scene = new Scene(root);
 
         primaryStage.setTitle("Download All Files");
+        primaryStage.getIcons().add(new Image("http://images.gofreedownload.net/montreal-metro-clip-art-13225.jpg"));
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -128,14 +151,16 @@ public class DownloadAllFiles extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-    public void go(String url, String extension) {
+/*
+    public int go(String url, String extension){
         WebScanner scanner = new WebScanner();
+        int numberOfFiles = 0;
         try {
-            scanner.initiateSearch(url, extension, selectedDirectory);
+            numberOfFiles = scanner.initiateSearch(url, extension, selectedDirectory, message);
         } catch (Exception e) {
-
         }
+        return numberOfFiles;
     }
+*/
 
 }
