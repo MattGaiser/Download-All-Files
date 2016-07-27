@@ -90,6 +90,7 @@ public class DownloadAllFiles extends Application {
                     int numberOfFiles = 0;
                     String extension = fileExtension.getText();
                     String url = urlToDownload.getText();
+                    messageOutput.setText("");
                     numberOfFiles = go(url, extension, messageOutput);
                     if (numberOfFiles == 0) {
                         labelDirectory.setFill(Color.web("#ff0000"));
