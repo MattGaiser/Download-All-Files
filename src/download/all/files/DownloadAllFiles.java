@@ -24,7 +24,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.commons.validator.routines.UrlValidator;
 
-
 /**
  *
  * @author Matthew
@@ -59,7 +58,7 @@ public class DownloadAllFiles extends Application {
                 } else {
                     labelDirectory.setText(selectedDirectory.getAbsolutePath());
                 }
-            } 
+            }
         });
 
         Button btn = new Button();
@@ -68,41 +67,34 @@ public class DownloadAllFiles extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                
+
                 UrlValidator validator = new UrlValidator();
-                
+
                 if (urlToDownload.getText().equals("")) {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("No URL given.");
-                }
-                else if (!validator.isValid(urlToDownload.getText()))
-                 {
+                } else if (!validator.isValid(urlToDownload.getText())) {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("URL is not valid");
-                 }
-                else if (fileExtension.getText().equals("")) {
+                } else if (fileExtension.getText().equals("")) {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("Filetype not selected");
-                } 
-                else if (labelDirectory.getText().contains("No Directory"))
-                {
+                } else if (!validateFileType(fileExtension.getText())) {
+                    messageOutput.setFill(Color.web("#ff0000"));
+                    messageOutput.setText("A period must be the first char in a file type");
+                } else if (labelDirectory.getText().contains("No Directory")) {
                     messageOutput.setFill(Color.web("#ff0000"));
                     messageOutput.setText("Directory not selected");
-                }
-                
-                else {
+                } else {
 
-                    int numberOfFiles = 0; 
+                    int numberOfFiles = 0;
                     String extension = fileExtension.getText();
                     String url = urlToDownload.getText();
-                    numberOfFiles = go(url, extension, messageOutput);                    
-                    if (numberOfFiles == 0)
-                    {
+                    numberOfFiles = go(url, extension, messageOutput);
+                    if (numberOfFiles == 0) {
                         labelDirectory.setFill(Color.web("#ff0000"));
                         labelDirectory.setText("No files found.");
-                    }
-                    else 
-                    {
+                    } else {
                         labelDirectory.setFill(Color.web("#00ff00"));
                         labelDirectory.setText("Complete. " + numberOfFiles + " files downloaded.");
 
@@ -112,13 +104,20 @@ public class DownloadAllFiles extends Application {
 
             private int go(String url, String extension, Text messageOutput) {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                 WebScanner scanner = new WebScanner();
-        int numberOfFiles = 0;
-        try {
-            numberOfFiles = scanner.initiateSearch(url, extension, selectedDirectory, messageOutput);
-        } catch (Exception e) {
-        }
-        return numberOfFiles;
+                WebScanner scanner = new WebScanner();
+                int numberOfFiles = 0;
+                try {
+                    numberOfFiles = scanner.initiateSearch(url, extension, selectedDirectory, messageOutput);
+                } catch (Exception e) {
+                }
+                return numberOfFiles;
+            }
+
+            private boolean validateFileType(String fileType) {
+                if (fileType.charAt(0) != '.') {
+                    return false;
+                }
+                return true;
             }
         });
 
@@ -151,7 +150,7 @@ public class DownloadAllFiles extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-/*
+    /*
     public int go(String url, String extension){
         WebScanner scanner = new WebScanner();
         int numberOfFiles = 0;
@@ -161,6 +160,6 @@ public class DownloadAllFiles extends Application {
         }
         return numberOfFiles;
     }
-*/
+     */
 
 }
